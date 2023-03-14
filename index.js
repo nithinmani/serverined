@@ -202,15 +202,16 @@ app.post("/api/password-reset/:id/:token", async (req, res) => {
     });
     if (!token) return res.status(400).send({ message: "Invalid link" });
 
-    if (!user.isVerified) user.isVerified = true;
+    if (!user.isVerified) {
+      user.isVerified = true;
 
-    const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+      const salt = await bcrypt.genSalt(Number(process.env.SALT));
+      const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-    user.password = hashPassword;
-    await user.save();
-    await token.remove();
-
+      user.password = hashPassword;
+      await user.save();
+      await token.remove();
+    }
     res.status(200).send({ message: "Password reset successfully" });
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
