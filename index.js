@@ -18,7 +18,7 @@ require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
-
+const PORT = process.env.PORT || 3030;
 mongoose.connect(
   "mongodb+srv://dracula:twRgpnkO5kqs79zR@cluster0.bcjdqnj.mongodb.net/?retryWrites=true&w=majority",
   {
@@ -361,7 +361,7 @@ app.post("/api/delete", async (req, res) => {
 
 //server starting codeeee......................................................................
 
-app.listen(1337, () => {
-  console.log("Server started on 1337");
+app.listen(PORT, () => {
+  console.log(`server started on port ${PORT}`);
 });
 //server started.....................................................................................
