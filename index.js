@@ -10,10 +10,8 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const sendEmail = require("./models/email");
 const Token = require("./models/token");
-// const passwordResetRoutes = require("./passwordreset");
-
-// const Joi = require("Joi");
-// const passwordComplexity = require("joi-password-complexity");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 require("dotenv").config();
 
 app.use(cors());
