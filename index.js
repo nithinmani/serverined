@@ -46,7 +46,6 @@ app.post("/api/register", async (req, res) => {
 
     const message = `${process.env.BASE_URL}/verify/${user.id}/${token.token}`;
 
-    // const message = `https://localhost:3000/verify/${user.id}/${token.token}`;
     await sendEmail(user.email, "Verify Email", message);
 
     res.json(
@@ -103,9 +102,6 @@ app.post("/api/login", async (req, res) => {
         user: false,
       });
     }
-    // if (user.isVerified == false) {
-    //   return res.json({ status: "error", error: "Not Verified" });
-    // }
 
     if (user.isVerified == false) {
       let token = await Token.findOne({ userId: user._id });
@@ -184,13 +180,6 @@ app.get("/api/password-reset/:id/:token", async (req, res) => {
 //  set new password
 app.post("/api/password-reset/:id/:token", async (req, res) => {
   try {
-    // const passwordSchema = Joi.object({
-    //   password: passwordComplexity().required().label("Password"),
-    // });
-    // const { error } = passwordSchema.validate(req.body);
-    // if (error)
-    //   return res.status(400).send({ message: error.details[0].message });
-
     const user = await UserModel.findOne({ _id: req.params.id });
     if (!user) return res.status(400).send({ message: "Invalid link" });
 
@@ -308,7 +297,7 @@ app.get("/api/get-user", async (req, res) => {
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "080d5391a5msh8465fd7b03a93c4p1725e9jsnb512929f94b5",
+        "X-RapidAPI-Key": "2be1de11d0msh58feda7445d3b54p1b9fdbjsne738a62ed5e4",
         "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com",
       },
     };
