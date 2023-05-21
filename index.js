@@ -85,7 +85,7 @@ app.get("/verify/:id/:token", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
-
+    console.log(req.body.email);
     if (!user) {
       return res.json({ status: "error", error: "Invalid login" });
     }
@@ -115,6 +115,7 @@ app.post("/api/login", async (req, res) => {
         .status(400)
         .send({ message: "An Email sent to your account please verify" });
     }
+    console.log("pass verified");
     const token = jwt.sign(
       {
         name: user.name,
@@ -122,6 +123,7 @@ app.post("/api/login", async (req, res) => {
       },
       "secret123"
     );
+    console.log(token);
 
     return res.json({ status: "ok", user: token });
   } catch (error) {
@@ -163,6 +165,7 @@ app.post("/api/password-reset", async (req, res) => {
 app.get("/api/password-reset/:id/:token", async (req, res) => {
   try {
     const user = await UserModel.findOne({ _id: req.params.id });
+    console.log(user);
     if (!user) return res.status(400).send({ message: "Invalid link" });
 
     const token = await Token.findOne({
@@ -170,9 +173,10 @@ app.get("/api/password-reset/:id/:token", async (req, res) => {
       token: req.params.token,
     });
     if (!token) return res.status(400).send({ message: "Invalid link" });
-
+    console.log("valid url");
     res.status(200).send("Valid Url");
   } catch (error) {
+    console.log("server error");
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -294,26 +298,17 @@ app.get("/api/get-user", async (req, res) => {
         },
       },
     ]);
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "2be1de11d0msh58feda7445d3b54p1b9fdbjsne738a62ed5e4",
-        "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com",
-      },
-    };
 
-    fetch(
-      `https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/${stockDetails.company}/financial-data`,
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
     // return success response
     console.log(stockDetails);
-    console.log(typeof stockDetails.details);
+    console.log(typeof stockDetails);
     console.log(stockDetails.details);
-    return res.status(200).json({ user: user, stocks: stockDetails });
+    console.log(user);
+    if (stockDetails.length > 0) {
+      return res.status(200).json({ user: user, stocks: stockDetails });
+    } else {
+      return res.status(200).json({ user: user, stocks: [] });
+    }
   } catch (error) {
     console.log(error);
 
@@ -332,11 +327,13 @@ app.post("/api/delete", async (req, res) => {
     const { id } = req.body;
 
     const deletedStock = await StockModel.findById({ _id: id });
+   
+
     if (!deletedStock) {
       return res.status(400).json({ msg: "No such Stock" });
     }
 
-    await deletedStock.remove();
+    await StockModel.deleteOne({ _id: id });
     return res.json({ msg: "User deleted successfully" });
   } catch (error) {
     console.error(error);
