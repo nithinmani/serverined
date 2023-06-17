@@ -106,7 +106,7 @@ app.post("/api/login", async (req, res) => {
     if (user.isVerified == false) {
       let token = await Token.findOne({ userId: user._id });
       if (token) {
-        const url = `${process.env.BASE_URL}/verify/${user.id}/${token.token}`;
+        const url = `${process.env.BASE_URL}/#/verify/${user.id}/${token.token}`;
         await sendEmail(user.email, "Verify Email", url);
         return res.json({ status: "error", error: "Not Verified" });
       }
@@ -150,7 +150,7 @@ app.post("/api/password-reset", async (req, res) => {
       }).save();
     }
 
-    const url = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}/`;
+    const url = `${process.env.BASE_URL}/#/password-reset/${user._id}/${token.token}/`;
     await sendEmail(user.email, "Password Reset", url);
 
     res
